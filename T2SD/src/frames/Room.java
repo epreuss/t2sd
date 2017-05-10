@@ -22,14 +22,20 @@ public class Room extends javax.swing.JFrame {
         labelRoom.setText(room.getName());
         labelUser.setText("User: " + user.usrName);
         user.areaChat = areaChat;
-        //refreshUserList();
+        buttonSend.setEnabled(false);
     }
 
-    public void refreshUserList()
+    public void sendMessage()
     {
-        
+        try {
+            room.sendMsg(user.usrName, fieldMsg.getText());
+        } catch (RemoteException ex) {
+            Logger.getLogger(Room.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        fieldMsg.setText("");
+        buttonSend.setEnabled(false);
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -41,37 +47,25 @@ public class Room extends javax.swing.JFrame {
 
         labelRoom = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        listUsers = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         areaChat = new javax.swing.JTextArea();
         fieldMsg = new javax.swing.JTextField();
         labelUser = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        buttonSend = new javax.swing.JButton();
         buttonExit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Room");
-        setMinimumSize(new java.awt.Dimension(290, 360));
+        setMinimumSize(new java.awt.Dimension(290, 400));
         getContentPane().setLayout(null);
 
         labelRoom.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        labelRoom.setText("Room name");
+        labelRoom.setText("Room");
         getContentPane().add(labelRoom);
         labelRoom.setBounds(10, 11, 160, 22);
         getContentPane().add(jSeparator1);
         jSeparator1.setBounds(10, 44, 250, 10);
-
-        listUsers.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(listUsers);
-
-        getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(182, 83, 75, 191);
 
         areaChat.setEditable(false);
         areaChat.setColumns(20);
@@ -79,15 +73,18 @@ public class Room extends javax.swing.JFrame {
         jScrollPane2.setViewportView(areaChat);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(10, 83, 166, 191);
+        jScrollPane2.setBounds(10, 83, 250, 191);
 
         fieldMsg.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 fieldMsgKeyPressed(evt);
             }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                fieldMsgKeyReleased(evt);
+            }
         });
         getContentPane().add(fieldMsg);
-        fieldMsg.setBounds(10, 280, 166, 30);
+        fieldMsg.setBounds(10, 280, 250, 30);
 
         labelUser.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelUser.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -95,15 +92,19 @@ public class Room extends javax.swing.JFrame {
         getContentPane().add(labelUser);
         labelUser.setBounds(121, 10, 140, 30);
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel3.setText("Users");
-        getContentPane().add(jLabel3);
-        jLabel3.setBounds(182, 60, 33, 17);
-
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("Chat");
         getContentPane().add(jLabel4);
         jLabel4.setBounds(10, 60, 29, 17);
+
+        buttonSend.setText("Send");
+        buttonSend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSendActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonSend);
+        buttonSend.setBounds(10, 320, 120, 30);
 
         buttonExit.setText("Exit");
         buttonExit.addActionListener(new java.awt.event.ActionListener() {
@@ -112,27 +113,34 @@ public class Room extends javax.swing.JFrame {
             }
         });
         getContentPane().add(buttonExit);
-        buttonExit.setBounds(180, 280, 80, 30);
+        buttonExit.setBounds(150, 320, 110, 30);
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonExitActionPerformed
+    private void buttonSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSendActionPerformed
+        sendMessage();
+    }//GEN-LAST:event_buttonSendActionPerformed
 
     private void fieldMsgKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fieldMsgKeyPressed
         if (evt.getKeyCode() == 10) // Enter.
-        {
-            try {
-                room.sendMsg(user.getName(), fieldMsg.getText());
-                fieldMsg.setText("");
-            } catch (RemoteException ex) {
-                Logger.getLogger(Room.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+            sendMessage();
     }//GEN-LAST:event_fieldMsgKeyPressed
+
+    private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        try {
+            room.leaveRoom(user.usrName);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Room.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        User.main(user);
+        dispose();
+    }//GEN-LAST:event_buttonExitActionPerformed
+
+    private void fieldMsgKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fieldMsgKeyReleased
+        buttonSend.setEnabled(fieldMsg.getText().length() > 0);
+    }//GEN-LAST:event_fieldMsgKeyReleased
 
     /**
      * @param args the command line arguments
@@ -176,14 +184,12 @@ public class Room extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaChat;
     private javax.swing.JButton buttonExit;
+    private javax.swing.JButton buttonSend;
     private javax.swing.JTextField fieldMsg;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel labelRoom;
     private javax.swing.JLabel labelUser;
-    private javax.swing.JList<String> listUsers;
     // End of variables declaration//GEN-END:variables
 }

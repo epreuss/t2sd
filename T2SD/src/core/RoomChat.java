@@ -34,7 +34,7 @@ public class RoomChat extends UnicastRemoteObject implements IRoomChat
     }
     
     @Override
-    public void joinRoom(String usrName)
+    public void joinRoom(String usrName) throws RemoteException
     {
         try {
             Registry registry = LocateRegistry.getRegistry(2020);
@@ -46,32 +46,38 @@ public class RoomChat extends UnicastRemoteObject implements IRoomChat
     }
     
     @Override
-    public void sendMsg(String usrName, String msg)
+    public void sendMsg(String usrName, String msg) throws RemoteException
+    {
+        for (IUserChat user : userList)
+            user.deliverMsg(usrName, msg);
+    }
+
+    @Override
+    public void leaveRoom(String usrName) throws RemoteException 
+    {
+        for (IUserChat user : userList)
+        {
+            if (user.getName().equals(usrName))
+            {
+                userList.remove(user);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void closeRoom() throws RemoteException
     {
         try {
             Registry registry = LocateRegistry.getRegistry(2020);
-            for (IUserChat user : userList)
-            {
-                IUserChat stub = (IUserChat) registry.lookup("UserChat#" + user.getName());
-                stub.deliverMsg(usrName, msg);
-            }
+            registry.unbind("RoomChat#" + name);
         } catch (Exception ex) {
             Logger.getLogger(UserChat.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
-    public void leaveRoom(String usrName) 
-    {
-    }
-
-    @Override
-    public void closeRoom() 
-    {
-    }
-
-    @Override
-    public String getName()
+    public String getName() throws RemoteException
     {
         return name;
     }

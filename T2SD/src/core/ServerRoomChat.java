@@ -1,5 +1,6 @@
 package core;
 
+import frames.Server;
 import interfaces.IRoomChat;
 import interfaces.IServerRoomChat;
 import java.rmi.RemoteException;
@@ -18,6 +19,7 @@ import java.util.logging.Logger;
 public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomChat
 {
     List<IRoomChat> roomList;
+    public Server frame;
 
     public ServerRoomChat() throws RemoteException
     {
@@ -34,8 +36,13 @@ public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomCh
     }
     
     @Override
-    public void criateRoom(String roomName)
+    public void criateRoom(String roomName) throws RemoteException
     {
+        // Não deixa criar com nomes iguais.
+        for (IRoomChat room : roomList)
+            if (room.getName().equals(roomName))
+                return;
+        
         try {
             new RoomChat(roomName);
             Registry registry = LocateRegistry.getRegistry(2020);
@@ -44,11 +51,20 @@ public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomCh
         } catch (Exception ex) {
             Logger.getLogger(UserChat.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        if (frame != null)
+            frame.refreshRooms();
     }
 
     @Override
-    public List<IRoomChat> getRooms()
+    public List<IRoomChat> getRooms() throws RemoteException
     {
         return roomList;
+    }
+    
+    public void removeRoom(IRoomChat room)
+    {
+        roomList.remove(room);
+        room = null;
     }
 }

@@ -31,13 +31,13 @@ public class UserChat extends UnicastRemoteObject implements IUserChat
     }
 
     @Override
-    public void deliverMsg(String senderName, String msg)
+    public void deliverMsg(String senderName, String msg) throws RemoteException
     {
         areaChat.append(senderName + ": " + msg + "\n");
     }
 
     @Override
-    public String getName() 
+    public String getName() throws RemoteException 
     {
         return usrName;
     }
