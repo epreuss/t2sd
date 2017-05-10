@@ -5,6 +5,11 @@
  */
 package frames;
 
+import core.ServerRoomChat;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Estevan
@@ -79,14 +84,21 @@ public class Main extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUserActionPerformed
-        // TODO add your handling code here:
+        User.main(null);
+        dispose();
     }//GEN-LAST:event_buttonUserActionPerformed
 
     private void buttonServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonServerActionPerformed
-        // TODO add your handling code here:
+        try {
+            ServerRoomChat server = new ServerRoomChat();
+        } catch (RemoteException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        dispose();
     }//GEN-LAST:event_buttonServerActionPerformed
 
     /**

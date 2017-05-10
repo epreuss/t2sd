@@ -5,17 +5,47 @@
  */
 package frames;
 
+import core.UserChat;
+import interfaces.IRoomChat;
+import interfaces.IServerRoomChat;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Estevan
  */
 public class User extends javax.swing.JFrame {
 
-    /**
-     * Creates new form User
-     */
-    public User() {
-        initComponents();
+    List<IRoomChat> roomsRefs;
+    
+    public User() throws RemoteException {
+        initComponents();        
+    }
+    
+    public void requestServerRooms()
+    {
+        try {
+            Registry registry = LocateRegistry.getRegistry(2020);//fieldIP.getText());
+            IServerRoomChat stub = (IServerRoomChat) registry.lookup("ServerRoomChat");
+            roomsRefs = stub.getRooms();
+            refreshRoomsList();
+        } catch (Exception ex) {
+            Logger.getLogger(UserChat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void refreshRoomsList() throws RemoteException
+    {
+        System.out.println("Rooms qtd: " + roomsRefs.size());
+        String[] listData = new String[roomsRefs.size()];
+        for (int i = 0; i < roomsRefs.size(); i++)
+            listData[i] = roomsRefs.get(i).getName();
+        listRooms.setListData(listData);
     }
 
     /**
@@ -28,42 +58,43 @@ public class User extends javax.swing.JFrame {
     private void initComponents() {
 
         jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        fieldNick = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        listRooms = new javax.swing.JList<>();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        fieldIP = new javax.swing.JTextField();
+        fieldPort = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        jButton2 = new javax.swing.JButton();
+        buttonJoin = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        buttonRooms = new javax.swing.JButton();
 
         jButton1.setText("jButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("User");
+        setMinimumSize(new java.awt.Dimension(320, 310));
         getContentPane().setLayout(null);
 
-        jTextField1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jTextField1.setText("Username");
-        getContentPane().add(jTextField1);
-        jTextField1.setBounds(10, 79, 140, 23);
+        fieldNick.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        fieldNick.setText("Bro");
+        getContentPane().add(fieldNick);
+        fieldNick.setBounds(10, 79, 140, 23);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setText("Rooms:");
         getContentPane().add(jLabel1);
         jLabel1.setBounds(170, 60, 90, 17);
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+        listRooms.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(listRooms);
 
         getContentPane().add(jScrollPane1);
         jScrollPane1.setBounds(170, 80, 120, 140);
@@ -74,15 +105,15 @@ public class User extends javax.swing.JFrame {
         getContentPane().add(jLabel2);
         jLabel2.setBounds(10, 114, 115, 17);
 
-        jTextField2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jTextField2.setText("IP");
-        getContentPane().add(jTextField2);
-        jTextField2.setBounds(10, 137, 140, 23);
+        fieldIP.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        fieldIP.setText("IP");
+        getContentPane().add(fieldIP);
+        fieldIP.setBounds(10, 137, 140, 23);
 
-        jTextField3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jTextField3.setText("Port");
-        getContentPane().add(jTextField3);
-        jTextField3.setBounds(10, 190, 140, 23);
+        fieldPort.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        fieldPort.setText("Port");
+        getContentPane().add(fieldPort);
+        fieldPort.setBounds(10, 190, 140, 23);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel3.setText("Port:");
@@ -97,24 +128,65 @@ public class User extends javax.swing.JFrame {
         getContentPane().add(jSeparator1);
         jSeparator1.setBounds(10, 39, 280, 10);
 
-        jButton2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton2.setText("Enter");
-        getContentPane().add(jButton2);
-        jButton2.setBounds(170, 230, 120, 25);
+        buttonJoin.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        buttonJoin.setText("Join");
+        buttonJoin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonJoinActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonJoin);
+        buttonJoin.setBounds(170, 230, 120, 25);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("Choose a nick:");
         getContentPane().add(jLabel5);
         jLabel5.setBounds(10, 55, 90, 17);
 
-        jButton3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton3.setText("Request rooms");
-        getContentPane().add(jButton3);
-        jButton3.setBounds(10, 230, 125, 25);
+        buttonRooms.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        buttonRooms.setText("Request rooms");
+        buttonRooms.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonRoomsActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonRooms);
+        buttonRooms.setBounds(10, 230, 140, 25);
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void buttonRoomsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRoomsActionPerformed
+        requestServerRooms();
+    }//GEN-LAST:event_buttonRoomsActionPerformed
+
+    private void buttonJoinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonJoinActionPerformed
+        String selectedRoom = listRooms.getSelectedValue();
+        if (selectedRoom == "null")
+        {
+            System.out.println("No selection");
+            return;
+        }
+        System.out.println("Selected room: " + selectedRoom);
+        try {
+            for (IRoomChat room : roomsRefs)
+            {
+                if (room.getName().equals(selectedRoom))
+                {
+                    String nick = fieldNick.getText();
+                    UserChat user = new UserChat(nick);
+                    room.joinRoom(nick);
+                    Room.main(room, user);
+                    System.out.println("Join success");      
+                    dispose();
+                }
+            }
+        } catch (Exception ex) 
+        {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_buttonJoinActionPerformed
 
     /**
      * @param args the command line arguments
@@ -146,25 +218,29 @@ public class User extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new User().setVisible(true);
+                try {
+                    new User().setVisible(true);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonJoin;
+    private javax.swing.JButton buttonRooms;
+    private javax.swing.JTextField fieldIP;
+    private javax.swing.JTextField fieldNick;
+    private javax.swing.JTextField fieldPort;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JList<String> listRooms;
     // End of variables declaration//GEN-END:variables
 }

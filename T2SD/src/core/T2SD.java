@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package t2sd;
+package core;
+
+import frames.Main;
 
 /**
  *
@@ -14,8 +16,9 @@ public class T2SD {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
+    public static void main(String[] args) 
+    {
+        Main.main(args);
     }
     
 }
