@@ -16,17 +16,19 @@ import javax.swing.JTextArea;
 public class UserChat extends UnicastRemoteObject implements IUserChat 
 {
     public String usrName;
+    public String serverIp;
     public JTextArea areaChat;
     
-    public UserChat(String usrName) throws RemoteException 
+    public UserChat(String usrName, String ip) throws RemoteException 
     {
         super();
         this.usrName = usrName;
+        serverIp = ip;
         try {
-            Registry registry = LocateRegistry.getRegistry(2020);
+            Registry registry = LocateRegistry.getRegistry(ip, 2020);
             registry.bind("UserChat#" + usrName, this);
         } catch (Exception ex) {
-            Logger.getLogger(ServerRoomChat.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserChat.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

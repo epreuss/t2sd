@@ -36,9 +36,16 @@ public class Main extends javax.swing.JFrame {
         buttonUser = new javax.swing.JButton();
         buttonServer = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        fieldIp = new javax.swing.JTextField();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         fieldNick = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("!");
+        setMinimumSize(new java.awt.Dimension(160, 300));
+        getContentPane().setLayout(null);
 
         buttonUser.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         buttonUser.setText("User");
@@ -48,6 +55,8 @@ public class Main extends javax.swing.JFrame {
                 buttonUserActionPerformed(evt);
             }
         });
+        getContentPane().add(buttonUser);
+        buttonUser.setBounds(10, 220, 120, 30);
 
         buttonServer.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         buttonServer.setText("Server");
@@ -56,41 +65,34 @@ public class Main extends javax.swing.JFrame {
                 buttonServerActionPerformed(evt);
             }
         });
+        getContentPane().add(buttonServer);
+        buttonServer.setBounds(10, 39, 120, 30);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Start as:");
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(10, 11, 120, 17);
 
-        fieldNick.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        fieldIp.setText("localhost");
+        getContentPane().add(fieldIp);
+        fieldIp.setBounds(10, 120, 120, 30);
+        getContentPane().add(jSeparator1);
+        jSeparator1.setBounds(10, 80, 120, 10);
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel2.setText("Server IP:");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(10, 100, 90, 17);
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel3.setText("Username:");
+        getContentPane().add(jLabel3);
+        jLabel3.setBounds(10, 160, 90, 17);
+
         fieldNick.setText("Nick");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(fieldNick, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(buttonServer, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
-                        .addComponent(buttonUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(buttonServer, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonUser, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fieldNick, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        getContentPane().add(fieldNick);
+        fieldNick.setBounds(10, 180, 120, 30);
 
         pack();
         setLocationRelativeTo(null);
@@ -99,7 +101,7 @@ public class Main extends javax.swing.JFrame {
     private void buttonUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUserActionPerformed
         UserChat user = null;
         try {
-            user = new UserChat(fieldNick.getText());
+            user = new UserChat(fieldNick.getText(), fieldIp.getText());
         } catch (RemoteException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -156,7 +158,11 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonServer;
     private javax.swing.JButton buttonUser;
+    private javax.swing.JTextField fieldIp;
     private javax.swing.JTextField fieldNick;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JSeparator jSeparator1;
     // End of variables declaration//GEN-END:variables
 }

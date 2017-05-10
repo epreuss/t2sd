@@ -29,7 +29,7 @@ public class RoomChat extends UnicastRemoteObject implements IRoomChat
             Registry registry = LocateRegistry.getRegistry(2020);
             registry.bind("RoomChat#" + name, this);
         } catch (Exception ex) {
-            Logger.getLogger(ServerRoomChat.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RoomChat.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -41,7 +41,7 @@ public class RoomChat extends UnicastRemoteObject implements IRoomChat
             IUserChat stub = (IUserChat) registry.lookup("UserChat#" + usrName);
             userList.add(stub);
         } catch (Exception ex) {
-            Logger.getLogger(UserChat.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RoomChat.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -56,13 +56,11 @@ public class RoomChat extends UnicastRemoteObject implements IRoomChat
     public void leaveRoom(String usrName) throws RemoteException 
     {
         for (IUserChat user : userList)
-        {
             if (user.getName().equals(usrName))
             {
                 userList.remove(user);
                 break;
             }
-        }
     }
 
     @Override
@@ -72,7 +70,7 @@ public class RoomChat extends UnicastRemoteObject implements IRoomChat
             Registry registry = LocateRegistry.getRegistry(2020);
             registry.unbind("RoomChat#" + name);
         } catch (Exception ex) {
-            Logger.getLogger(UserChat.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RoomChat.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

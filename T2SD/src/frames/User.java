@@ -39,7 +39,7 @@ public class User extends javax.swing.JFrame {
     public void requestServerRooms()
     {
         try {
-            Registry registry = LocateRegistry.getRegistry(fieldIP.getText(), Integer.parseInt(fieldPort.getText()));
+            Registry registry = LocateRegistry.getRegistry(user.serverIp, 2020);
             IServerRoomChat stub = (IServerRoomChat) registry.lookup("ServerRoomChat");
             roomsRefs = stub.getRooms();
             refreshListRooms();
@@ -52,7 +52,7 @@ public class User extends javax.swing.JFrame {
     public void requestRoomCreation(String roomName)
     {
         try {
-            Registry registry = LocateRegistry.getRegistry(fieldIP.getText(), Integer.parseInt(fieldPort.getText()));
+            Registry registry = LocateRegistry.getRegistry(user.serverIp, 2020);
             IServerRoomChat stub = (IServerRoomChat) registry.lookup("ServerRoomChat");
             stub.criateRoom(roomName);
         } catch (Exception ex) {
@@ -79,13 +79,8 @@ public class User extends javax.swing.JFrame {
     private void initComponents() {
 
         jButton1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         listRooms = new javax.swing.JList<>();
-        jLabel2 = new javax.swing.JLabel();
-        fieldIP = new javax.swing.JTextField();
-        fieldPort = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
         labelUser = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         buttonJoin = new javax.swing.JButton();
@@ -94,7 +89,6 @@ public class User extends javax.swing.JFrame {
         fieldRoom = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         buttonRefresh = new javax.swing.JButton();
-        jSeparator2 = new javax.swing.JSeparator();
 
         jButton1.setText("jButton1");
 
@@ -102,11 +96,6 @@ public class User extends javax.swing.JFrame {
         setTitle("User");
         setMinimumSize(new java.awt.Dimension(320, 345));
         getContentPane().setLayout(null);
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel1.setText("Server:");
-        getContentPane().add(jLabel1);
-        jLabel1.setBounds(10, 50, 130, 17);
 
         listRooms.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -116,30 +105,7 @@ public class User extends javax.swing.JFrame {
         jScrollPane1.setViewportView(listRooms);
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(170, 70, 120, 160);
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel2.setText("Internet Protocol:");
-        jLabel2.setToolTipText("");
-        getContentPane().add(jLabel2);
-        jLabel2.setBounds(10, 80, 115, 17);
-
-        fieldIP.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        fieldIP.setText("localhost");
-        fieldIP.setMinimumSize(new java.awt.Dimension(6, 26));
-        getContentPane().add(fieldIP);
-        fieldIP.setBounds(10, 100, 140, 30);
-
-        fieldPort.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        fieldPort.setText("2020");
-        getContentPane().add(fieldPort);
-        fieldPort.setBounds(10, 160, 140, 30);
-
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel3.setText("Port:");
-        jLabel3.setToolTipText("");
-        getContentPane().add(jLabel3);
-        jLabel3.setBounds(10, 140, 140, 17);
+        jScrollPane1.setBounds(10, 70, 120, 160);
 
         labelUser.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         labelUser.setText("User");
@@ -156,7 +122,7 @@ public class User extends javax.swing.JFrame {
             }
         });
         getContentPane().add(buttonJoin);
-        buttonJoin.setBounds(170, 270, 120, 25);
+        buttonJoin.setBounds(10, 270, 120, 25);
 
         buttonCreate.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         buttonCreate.setText("Create");
@@ -166,23 +132,23 @@ public class User extends javax.swing.JFrame {
             }
         });
         getContentPane().add(buttonCreate);
-        buttonCreate.setBounds(10, 270, 140, 25);
+        buttonCreate.setBounds(140, 110, 140, 25);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("Rooms:");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(170, 50, 90, 17);
+        jLabel4.setBounds(10, 50, 90, 17);
 
         fieldRoom.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         fieldRoom.setText("MyRoom");
         getContentPane().add(fieldRoom);
-        fieldRoom.setBounds(10, 230, 140, 30);
+        fieldRoom.setBounds(140, 70, 140, 30);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("Room name:");
         jLabel5.setToolTipText("");
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(10, 210, 140, 17);
+        jLabel5.setBounds(140, 50, 140, 17);
 
         buttonRefresh.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         buttonRefresh.setText("Refresh");
@@ -192,9 +158,7 @@ public class User extends javax.swing.JFrame {
             }
         });
         getContentPane().add(buttonRefresh);
-        buttonRefresh.setBounds(170, 240, 120, 25);
-        getContentPane().add(jSeparator2);
-        jSeparator2.setBounds(10, 200, 140, 10);
+        buttonRefresh.setBounds(10, 240, 120, 25);
 
         pack();
         setLocationRelativeTo(null);
@@ -279,18 +243,12 @@ public class User extends javax.swing.JFrame {
     private javax.swing.JButton buttonCreate;
     private javax.swing.JButton buttonJoin;
     private javax.swing.JButton buttonRefresh;
-    private javax.swing.JTextField fieldIP;
-    private javax.swing.JTextField fieldPort;
     private javax.swing.JTextField fieldRoom;
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel labelUser;
     private javax.swing.JList<String> listRooms;
     // End of variables declaration//GEN-END:variables

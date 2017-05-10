@@ -49,7 +49,7 @@ public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomCh
             IRoomChat stub = (IRoomChat) registry.lookup("RoomChat#" + roomName);
             roomList.add(stub);
         } catch (Exception ex) {
-            Logger.getLogger(UserChat.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServerRoomChat.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         if (frame != null)
