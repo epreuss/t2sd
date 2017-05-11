@@ -1,5 +1,6 @@
 package core;
 
+import interfaces.IServerRoomChat;
 import interfaces.IUserChat;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -19,18 +20,16 @@ public class UserChat extends UnicastRemoteObject implements IUserChat
     public String serverIp;
     public JTextArea areaChat;
     
-    public UserChat(String usrName, String ip) throws RemoteException 
+    public UserChat(String usrName, String serverIp) throws RemoteException 
     {
         super();
         this.usrName = usrName;
-        serverIp = ip;
+        this.serverIp = serverIp;
         try {
             Registry registry;
-            if (ip.equals("localhost"))
-                registry = LocateRegistry.getRegistry(ip, 2020);
-            else
-                registry = LocateRegistry.createRegistry(2020);
-            registry.bind("UserChat#" + usrName, this);
+            registry = LocateRegistry.getRegistry(serverIp, 2020);
+            IServerRoomChat stub = (IServerRoomChat) registry.lookup("ServerRoomChat");
+            stub.bindUser(this);
         } catch (Exception ex) {
             Logger.getLogger(UserChat.class.getName()).log(Level.SEVERE, null, ex);
         }

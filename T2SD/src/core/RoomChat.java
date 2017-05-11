@@ -34,10 +34,16 @@ public class RoomChat extends UnicastRemoteObject implements IRoomChat
     }
     
     @Override
-    public void joinRoom(IUserChat remoteUser) throws RemoteException
+    public void joinRoom(String usrName) throws RemoteException
     {
-        userList.add(remoteUser);
-        System.out.println("Room " + name + " added " + remoteUser.getName());
+        try {
+            Registry registry = LocateRegistry.getRegistry(2020);
+            IUserChat stub = (IUserChat) registry.lookup("UserChat#" + usrName);
+            userList.add(stub);
+            System.out.println("Room " + name + " added " + stub.getName());
+        } catch (Exception ex) {
+            Logger.getLogger(RoomChat.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @Override

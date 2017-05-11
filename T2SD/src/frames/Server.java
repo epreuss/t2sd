@@ -31,7 +31,6 @@ public class Server extends javax.swing.JFrame {
     public void refreshRooms() throws RemoteException
     {
         List<IRoomChat> roomsRefs = server.getRooms();
-        System.out.println("Rooms qtd: " + roomsRefs.size());
         String[] listData = new String[roomsRefs.size()];
         for (int i = 0; i < roomsRefs.size(); i++)
             listData[i] = roomsRefs.get(i).getName();

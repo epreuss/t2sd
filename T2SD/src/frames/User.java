@@ -63,7 +63,6 @@ public class User extends javax.swing.JFrame {
     
     public void refreshListRooms() throws RemoteException
     {
-        System.out.println("Rooms qtd: " + roomsRefs.size());
         String[] listData = new String[roomsRefs.size()];
         for (int i = 0; i < roomsRefs.size(); i++)
             listData[i] = roomsRefs.get(i).getName();
@@ -184,9 +183,7 @@ public class User extends javax.swing.JFrame {
             {
                 if (room.getName().equals(selectedRoom))
                 {
-                    Registry registry = LocateRegistry.getRegistry(2020);
-                    IUserChat stub = (IUserChat) registry.lookup("UserChat#" + user.usrName);
-                    room.joinRoom(stub);
+                    room.joinRoom(user.usrName);
                     Room.main(room, user);
                     System.out.println("Join success");      
                     dispose();

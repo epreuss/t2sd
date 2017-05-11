@@ -62,6 +62,17 @@ public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomCh
         return roomList;
     }
     
+    @Override
+    public void bindUser(UserChat user) throws RemoteException 
+    {
+        try {
+            Registry registry = LocateRegistry.getRegistry(2020);
+            registry.bind("UserChat#" + user.usrName, user);
+        } catch (Exception ex) {
+            Logger.getLogger(ServerRoomChat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public void removeRoom(IRoomChat room)
     {
         roomList.remove(room);
