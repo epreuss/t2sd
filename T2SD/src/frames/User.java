@@ -8,6 +8,7 @@ package frames;
 import core.UserChat;
 import interfaces.IRoomChat;
 import interfaces.IServerRoomChat;
+import interfaces.IUserChat;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -28,7 +29,7 @@ public class User extends javax.swing.JFrame {
         initComponents();      
         this.user = user;
         labelUser.setText(user.usrName);
-        emptyRoomsList();
+        requestServerRooms();
     }
     
     public void emptyRoomsList()
@@ -44,7 +45,7 @@ public class User extends javax.swing.JFrame {
             roomsRefs = stub.getRooms();
             refreshListRooms();
         } catch (Exception ex) {
-            Logger.getLogger(UserChat.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
             emptyRoomsList();
         }
     }
@@ -56,7 +57,7 @@ public class User extends javax.swing.JFrame {
             IServerRoomChat stub = (IServerRoomChat) registry.lookup("ServerRoomChat");
             stub.criateRoom(roomName);
         } catch (Exception ex) {
-            Logger.getLogger(UserChat.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -181,9 +182,11 @@ public class User extends javax.swing.JFrame {
         try {
             for (IRoomChat room : roomsRefs)
             {
-                if (room != null && room.getName().equals(selectedRoom))
+                if (room.getName().equals(selectedRoom))
                 {
-                    room.joinRoom(user.usrName);
+                    Registry registry = LocateRegistry.getRegistry(2020);
+                    IUserChat stub = (IUserChat) registry.lookup("UserChat#" + user.usrName);
+                    room.joinRoom(stub);
                     Room.main(room, user);
                     System.out.println("Join success");      
                     dispose();

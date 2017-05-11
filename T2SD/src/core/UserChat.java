@@ -25,7 +25,11 @@ public class UserChat extends UnicastRemoteObject implements IUserChat
         this.usrName = usrName;
         serverIp = ip;
         try {
-            Registry registry = LocateRegistry.getRegistry(ip, 2020);
+            Registry registry;
+            if (ip.equals("localhost"))
+                registry = LocateRegistry.getRegistry(ip, 2020);
+            else
+                registry = LocateRegistry.createRegistry(2020);
             registry.bind("UserChat#" + usrName, this);
         } catch (Exception ex) {
             Logger.getLogger(UserChat.class.getName()).log(Level.SEVERE, null, ex);

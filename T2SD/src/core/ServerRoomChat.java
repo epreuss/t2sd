@@ -34,7 +34,7 @@ public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomCh
         }
         System.out.println("Server start!");
     }
-    
+
     @Override
     public void criateRoom(String roomName) throws RemoteException
     {
