@@ -5,6 +5,7 @@
  */
 package frames;
 
+import core.Definitions;
 import core.UserChat;
 import interfaces.IRoomChat;
 import interfaces.IServerRoomChat;
@@ -23,12 +24,12 @@ import java.util.logging.Logger;
 public class User extends javax.swing.JFrame {
 
     List<IRoomChat> roomsRefs;
-    UserChat user;
+    IUserChat user;
     
-    public User(UserChat user) throws RemoteException {
+    public User(IUserChat user) throws RemoteException {
         initComponents();      
         this.user = user;
-        labelUser.setText(user.usrName);
+        labelUser.setText(user.getName());
         requestServerRooms();
     }
     
@@ -40,7 +41,7 @@ public class User extends javax.swing.JFrame {
     public void requestServerRooms()
     {
         try {
-            Registry registry = LocateRegistry.getRegistry(user.serverIp, 2020);
+            Registry registry = LocateRegistry.getRegistry(Definitions.serverIp, 2020);
             IServerRoomChat stub = (IServerRoomChat) registry.lookup("ServerRoomChat");
             roomsRefs = stub.getRooms();
             refreshListRooms();
@@ -53,7 +54,7 @@ public class User extends javax.swing.JFrame {
     public void requestRoomCreation(String roomName)
     {
         try {
-            Registry registry = LocateRegistry.getRegistry(user.serverIp, 2020);
+            Registry registry = LocateRegistry.getRegistry(Definitions.serverIp, 2020);
             IServerRoomChat stub = (IServerRoomChat) registry.lookup("ServerRoomChat");
             stub.criateRoom(roomName);
         } catch (Exception ex) {
@@ -183,7 +184,7 @@ public class User extends javax.swing.JFrame {
             {
                 if (room.getName().equals(selectedRoom))
                 {
-                    room.joinRoom(user.usrName);
+                    room.joinRoom(user.getName());
                     Room.main(room, user);
                     System.out.println("Join success");      
                     dispose();
@@ -203,7 +204,7 @@ public class User extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(UserChat user) {
+    public static void main(IUserChat user) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

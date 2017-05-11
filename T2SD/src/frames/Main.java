@@ -5,9 +5,14 @@
  */
 package frames;
 
+import core.Definitions;
 import core.ServerRoomChat;
 import core.UserChat;
+import interfaces.IServerRoomChat;
+import interfaces.IUserChat;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -99,14 +104,19 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUserActionPerformed
-        UserChat user = null;
+        Definitions.serverIp = fieldIp.getText();
         try {
-            user = new UserChat(fieldNick.getText(), fieldIp.getText());
-        } catch (RemoteException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            Registry registry;
+            registry = LocateRegistry.getRegistry(Definitions.serverIp, 2020);
+            IServerRoomChat stub = (IServerRoomChat) registry.lookup("ServerRoomChat");
+            stub.bindUser(fieldNick.getText());
+            IUserChat user = (IUserChat) registry.lookup("UserChat#" + fieldNick.getText());
+            User.main(user);
+            dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(UserChat.class.getName()).log(Level.SEVERE, null, ex);
         }
-        User.main(user);
-        dispose();
+        buttonUser.setText("Bug");
     }//GEN-LAST:event_buttonUserActionPerformed
 
     private void buttonServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonServerActionPerformed

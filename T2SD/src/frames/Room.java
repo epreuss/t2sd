@@ -1,8 +1,13 @@
 package frames;
 
+import core.Definitions;
 import core.UserChat;
 import interfaces.IRoomChat;
+import interfaces.IServerRoomChat;
+import interfaces.IUserChat;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,22 +18,33 @@ import java.util.logging.Logger;
 public class Room extends javax.swing.JFrame {
 
     IRoomChat room;
-    UserChat user;
+    IUserChat user;
     
-    public Room(IRoomChat room, UserChat user) throws RemoteException {
+    public Room(IRoomChat room, IUserChat user) throws RemoteException {
         initComponents();
         this.room = room;
         this.user = user;
         labelRoom.setText(room.getName());
-        labelUser.setText("User: " + user.usrName);
-        user.areaChat = areaChat;
+        labelUser.setText("User: " + user.getName());
+        //user.setAreaChat(areaChat);
         buttonSend.setEnabled(false);
+        /*
+            System.out.println(Definitions.serverIp);
+        try {
+            IUserChat stub = null;
+            Registry registry = LocateRegistry.getRegistry(Definitions.serverIp, 2020);
+            stub = (IUserChat) registry.lookup("UserChat#" + user.getName());
+            stub.setAreaChat(areaChat);
+        } catch (Exception ex) {
+            Logger.getLogger(UserChat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        */
     }
 
     public void sendMessage()
     {
         try {
-            room.sendMsg(user.usrName, fieldMsg.getText());
+            room.sendMsg(user.getName(), fieldMsg.getText());
         } catch (RemoteException ex) {
             Logger.getLogger(Room.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -130,7 +146,7 @@ public class Room extends javax.swing.JFrame {
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
         try {
-            room.leaveRoom(user.usrName);
+            room.leaveRoom(user.getName());
         } catch (RemoteException ex) {
             Logger.getLogger(Room.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -145,7 +161,7 @@ public class Room extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(IRoomChat room, UserChat user) {
+    public static void main(IRoomChat room, IUserChat user) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
