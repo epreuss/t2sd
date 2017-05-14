@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomChat
 {
     List<IRoomChat> roomList;
-    public Server frame;
+    private Server frame;
 
     public ServerRoomChat() throws RemoteException
     {
@@ -31,7 +31,7 @@ public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomCh
         //System.setProperty("java.rmi.server.hostname","192.168.0.105");
         try {
             Registry registry = LocateRegistry.createRegistry(2020);
-            registry.bind("ServerRoomChat", this);
+            registry.bind(Definitions.serverBindName, this);
             criateRoom("Treta");
             System.out.println("Server start!");
         } catch (Exception ex) {
@@ -50,7 +50,7 @@ public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomCh
         try {
             new RoomChat(roomName);
             Registry registry = LocateRegistry.getRegistry(2020);
-            IRoomChat stub = (IRoomChat) registry.lookup("RoomChat#" + roomName);
+            IRoomChat stub = (IRoomChat) registry.lookup(Definitions.roomBindPrefix + roomName);
             roomList.add(stub);
         } catch (Exception ex) {
             Logger.getLogger(ServerRoomChat.class.getName()).log(Level.SEVERE, null, ex);
@@ -61,30 +61,31 @@ public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomCh
     }
 
     @Override
-    public List<IRoomChat> getRooms() throws RemoteException
+    public List<String> getRooms() throws RemoteException
     {
-        return roomList;
+        List<String> roomNames = new ArrayList();
+        for (IRoomChat room : roomList)
+            roomNames.add(room.getName());
+        return roomNames;
     }
-    
-    /*
-    @Override
-    public void bindUser(String usrName) throws RemoteException 
-    {
-        try {
-            UserChat user = new UserChat(usrName);
-            Registry registry = LocateRegistry.getRegistry(2020);
-            registry.bind("UserChat#" + usrName, user);
-            System.out.println("Server binded " + usrName);            
-        } catch (Exception ex) {
-            Logger.getLogger(ServerRoomChat.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    */
-    
+
     public void removeRoom(IRoomChat room)
     {
         roomList.remove(room);
         room = null;
+    }
+    
+    public IRoomChat getRoomRef(String name) throws RemoteException
+    {
+        for (IRoomChat room : roomList)
+            if (room.getName().equals(name))
+                return room;
+        return null;
+    }
+    
+    public void setFrame(Server frame)
+    {
+        this.frame = frame;
     }
 
     @Override
@@ -92,7 +93,7 @@ public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomCh
     {
         try {
             Registry registry = LocateRegistry.getRegistry(2020);
-            registry.bind("UserChat#" + stub.getName(), stub);
+            registry.bind(Definitions.userBindPrefix + stub.getName(), stub);
             System.out.println("Server binded " + stub.getName());            
         } catch (Exception ex) {
             Logger.getLogger(ServerRoomChat.class.getName()).log(Level.SEVERE, null, ex);

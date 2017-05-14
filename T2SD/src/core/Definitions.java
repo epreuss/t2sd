@@ -12,4 +12,7 @@ package core;
 public class Definitions 
 {
     public static String serverIp;
+    public static String serverBindName = "Servidor";    
+    public static String roomBindPrefix = "RoomChat#";
+    public static String userBindPrefix = "UserChat#";    
 }

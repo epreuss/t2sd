@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  */
 public class User extends javax.swing.JFrame {
 
-    List<IRoomChat> roomsRefs;
+    List<String> roomNames;
     UserChat user;
     
     public User(UserChat user) throws RemoteException {
@@ -42,8 +42,8 @@ public class User extends javax.swing.JFrame {
     {
         try {
             Registry registry = LocateRegistry.getRegistry(Definitions.serverIp, 2020);
-            IServerRoomChat stub = (IServerRoomChat) registry.lookup("ServerRoomChat");
-            roomsRefs = stub.getRooms();
+            IServerRoomChat stub = (IServerRoomChat) registry.lookup(Definitions.serverBindName);
+            roomNames = stub.getRooms();
             refreshListRooms();
         } catch (Exception ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
@@ -55,7 +55,7 @@ public class User extends javax.swing.JFrame {
     {
         try {
             Registry registry = LocateRegistry.getRegistry(Definitions.serverIp, 2020);
-            IServerRoomChat stub = (IServerRoomChat) registry.lookup("ServerRoomChat");
+            IServerRoomChat stub = (IServerRoomChat) registry.lookup(Definitions.serverBindName);
             stub.criateRoom(roomName);
         } catch (Exception ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
@@ -64,10 +64,22 @@ public class User extends javax.swing.JFrame {
     
     public void refreshListRooms() throws RemoteException
     {
-        String[] listData = new String[roomsRefs.size()];
-        for (int i = 0; i < roomsRefs.size(); i++)
-            listData[i] = roomsRefs.get(i).getName();
+        String[] listData = new String[roomNames.size()];
+        for (int i = 0; i < roomNames.size(); i++)
+            listData[i] = roomNames.get(i);
         listRooms.setListData(listData);
+    }
+    
+    public IRoomChat getRoomRef(String name) throws RemoteException
+    {
+        try {
+            Registry registry = LocateRegistry.getRegistry(Definitions.serverIp, 2020);
+            IRoomChat stub = (IRoomChat) registry.lookup(Definitions.roomBindPrefix + name);
+            return stub;
+        } catch (Exception ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     /**
@@ -103,6 +115,11 @@ public class User extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        listRooms.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listRoomsValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(listRooms);
 
         getContentPane().add(jScrollPane1);
@@ -117,6 +134,7 @@ public class User extends javax.swing.JFrame {
 
         buttonJoin.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         buttonJoin.setText("Join");
+        buttonJoin.setEnabled(false);
         buttonJoin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonJoinActionPerformed(evt);
@@ -168,6 +186,7 @@ public class User extends javax.swing.JFrame {
     private void buttonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateActionPerformed
         requestRoomCreation(fieldRoom.getText());
         requestServerRooms();
+        buttonJoin.setEnabled(false);
     }//GEN-LAST:event_buttonCreateActionPerformed
 
     private void buttonJoinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonJoinActionPerformed
@@ -180,12 +199,13 @@ public class User extends javax.swing.JFrame {
         requestServerRooms();
         System.out.println("Selected room: " + selectedRoom);
         try {
-            for (IRoomChat room : roomsRefs)
+            for (String room : roomNames)
             {
-                if (room.getName().equals(selectedRoom))
+                if (room.equals(selectedRoom))
                 {
-                    room.joinRoom(user.getName());
-                    Room.main(room, user);
+                    IRoomChat stub = getRoomRef(room);
+                    stub.joinRoom(user.getName());
+                    Room.main(stub, user);
                     System.out.println("Join success");      
                     dispose();
                     return;
@@ -199,7 +219,12 @@ public class User extends javax.swing.JFrame {
 
     private void buttonRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRefreshActionPerformed
         requestServerRooms();
+        buttonJoin.setEnabled(false);
     }//GEN-LAST:event_buttonRefreshActionPerformed
+
+    private void listRoomsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listRoomsValueChanged
+        buttonJoin.setEnabled(listRooms.getSelectedValue() != "null");
+    }//GEN-LAST:event_listRoomsValueChanged
 
     /**
      * @param args the command line arguments

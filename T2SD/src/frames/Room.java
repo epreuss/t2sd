@@ -28,17 +28,6 @@ public class Room extends javax.swing.JFrame {
         labelUser.setText("User: " + user.getName());
         user.setAreaChat(areaChat);
         buttonSend.setEnabled(false);
-        /*
-            System.out.println(Definitions.serverIp);
-        try {
-            IUserChat stub = null;
-            Registry registry = LocateRegistry.getRegistry(Definitions.serverIp, 2020);
-            stub = (IUserChat) registry.lookup("UserChat#" + user.getName());
-            stub.setAreaChat(areaChat);
-        } catch (Exception ex) {
-            Logger.getLogger(UserChat.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        */
     }
 
     public void sendMessage()
@@ -71,7 +60,7 @@ public class Room extends javax.swing.JFrame {
         buttonSend = new javax.swing.JButton();
         buttonExit = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Room");
         setMinimumSize(new java.awt.Dimension(290, 400));
         getContentPane().setLayout(null);
@@ -97,6 +86,9 @@ public class Room extends javax.swing.JFrame {
             }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 fieldMsgKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                fieldMsgKeyTyped(evt);
             }
         });
         getContentPane().add(fieldMsg);
@@ -140,23 +132,28 @@ public class Room extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonSendActionPerformed
 
     private void fieldMsgKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fieldMsgKeyPressed
+        buttonSend.setEnabled(fieldMsg.getText().length() > 0);
         if (evt.getKeyCode() == 10) // Enter.
             sendMessage();
     }//GEN-LAST:event_fieldMsgKeyPressed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        User.main(user);
+        dispose();
         try {
             room.leaveRoom(user.getName());
         } catch (RemoteException ex) {
             Logger.getLogger(Room.class.getName()).log(Level.SEVERE, null, ex);
         }
-        User.main(user);
-        dispose();
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void fieldMsgKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fieldMsgKeyReleased
         buttonSend.setEnabled(fieldMsg.getText().length() > 0);
     }//GEN-LAST:event_fieldMsgKeyReleased
+
+    private void fieldMsgKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fieldMsgKeyTyped
+        buttonSend.setEnabled(fieldMsg.getText().length() > 0);
+    }//GEN-LAST:event_fieldMsgKeyTyped
 
     /**
      * @param args the command line arguments

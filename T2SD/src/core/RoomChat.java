@@ -27,7 +27,7 @@ public class RoomChat extends UnicastRemoteObject implements IRoomChat
         userList = new ArrayList();
         try {
             Registry registry = LocateRegistry.getRegistry(2020);
-            registry.bind("RoomChat#" + name, this);
+            registry.bind(Definitions.roomBindPrefix + name, this);
         } catch (Exception ex) {
             Logger.getLogger(RoomChat.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -38,7 +38,7 @@ public class RoomChat extends UnicastRemoteObject implements IRoomChat
     {
         try {
             Registry registry = LocateRegistry.getRegistry(2020);
-            IUserChat stub = (IUserChat) registry.lookup("UserChat#" + usrName);
+            IUserChat stub = (IUserChat) registry.lookup(Definitions.userBindPrefix + usrName);
             userList.add(stub);
             System.out.println(stub.getName() + " joined " + "Room " + name);
         } catch (Exception ex) {
@@ -69,7 +69,9 @@ public class RoomChat extends UnicastRemoteObject implements IRoomChat
     {
         try {
             Registry registry = LocateRegistry.getRegistry(2020);
-            registry.unbind("RoomChat#" + name);
+            sendMsg("Server", "Sala fechada pelo servidor!");
+            registry.unbind(Definitions.roomBindPrefix + name);
+            userList = null;
         } catch (Exception ex) {
             Logger.getLogger(RoomChat.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -25,15 +25,15 @@ public class Server extends javax.swing.JFrame {
     public Server(ServerRoomChat server) throws RemoteException {
         initComponents();
         this.server = server;
-        this.server.frame = this;
+        this.server.setFrame(this);
         refreshRooms();
     }
     public void refreshRooms() throws RemoteException
     {
-        List<IRoomChat> roomsRefs = server.getRooms();
-        String[] listData = new String[roomsRefs.size()];
-        for (int i = 0; i < roomsRefs.size(); i++)
-            listData[i] = roomsRefs.get(i).getName();
+        List<String> roomNames = server.getRooms();
+        String[] listData = new String[roomNames.size()];
+        for (int i = 0; i < roomNames.size(); i++)
+            listData[i] = roomNames.get(i);
         listRooms.setListData(listData);
     }
 
@@ -73,6 +73,11 @@ public class Server extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        listRooms.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listRoomsValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(listRooms);
 
         getContentPane().add(jScrollPane1);
@@ -105,7 +110,8 @@ public class Server extends javax.swing.JFrame {
         jLabel5.setBounds(140, 50, 140, 17);
 
         buttonClose.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        buttonClose.setText("Remove");
+        buttonClose.setText("Close");
+        buttonClose.setEnabled(false);
         buttonClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonCloseActionPerformed(evt);
@@ -125,6 +131,7 @@ public class Server extends javax.swing.JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
+        buttonClose.setEnabled(false);
     }//GEN-LAST:event_buttonCreateActionPerformed
 
     private void buttonCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCloseActionPerformed
@@ -136,20 +143,19 @@ public class Server extends javax.swing.JFrame {
         }
         try 
         {
-            List<IRoomChat> roomsRefs = server.getRooms();
-            for (IRoomChat room : roomsRefs)
-                if (room.getName().equals(selectedRoom))
-                {
-                    room.closeRoom();
-                    server.removeRoom(room);
-                    refreshRooms();
-                    return;
-                }
+            IRoomChat stub = server.getRoomRef(selectedRoom);
+            stub.closeRoom();
+            server.removeRoom(stub);
+            refreshRooms();
         } catch (Exception ex) 
         {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_buttonCloseActionPerformed
+
+    private void listRoomsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listRoomsValueChanged
+        buttonClose.setEnabled(listRooms.getSelectedValue() != "null");
+    }//GEN-LAST:event_listRoomsValueChanged
 
     /**
      * @param args the command line arguments

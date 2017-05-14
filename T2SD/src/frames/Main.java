@@ -107,7 +107,7 @@ public class Main extends javax.swing.JFrame {
         Definitions.serverIp = fieldIp.getText();
         try {
             Registry registry = LocateRegistry.getRegistry(Definitions.serverIp, 2020);
-            IServerRoomChat stub = (IServerRoomChat) registry.lookup("ServerRoomChat");
+            IServerRoomChat stub = (IServerRoomChat) registry.lookup(Definitions.serverBindName);
             UserChat user = new UserChat(fieldNick.getText());
             stub.bindUser((IUserChat) user);
             User.main(user);
