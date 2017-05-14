@@ -60,9 +60,10 @@ public class Room extends javax.swing.JFrame {
         buttonSend = new javax.swing.JButton();
         buttonExit = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Room");
         setMinimumSize(new java.awt.Dimension(290, 400));
+        setResizable(false);
         getContentPane().setLayout(null);
 
         labelRoom.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N

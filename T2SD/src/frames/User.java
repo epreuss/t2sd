@@ -108,6 +108,7 @@ public class User extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("User");
         setMinimumSize(new java.awt.Dimension(320, 345));
+        setResizable(false);
         getContentPane().setLayout(null);
 
         listRooms.setModel(new javax.swing.AbstractListModel<String>() {

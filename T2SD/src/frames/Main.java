@@ -50,6 +50,7 @@ public class Main extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("!");
         setMinimumSize(new java.awt.Dimension(160, 300));
+        setResizable(false);
         getContentPane().setLayout(null);
 
         buttonUser.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N

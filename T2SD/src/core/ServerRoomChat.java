@@ -94,7 +94,7 @@ public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomCh
         try {
             Registry registry = LocateRegistry.getRegistry(2020);
             registry.bind(Definitions.userBindPrefix + stub.getName(), stub);
-            System.out.println("Server binded " + stub.getName());            
+            System.out.println("Server binded " + (Definitions.userBindPrefix + stub.getName()));            
         } catch (Exception ex) {
             Logger.getLogger(ServerRoomChat.class.getName()).log(Level.SEVERE, null, ex);
         }

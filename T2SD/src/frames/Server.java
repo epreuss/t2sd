@@ -59,6 +59,7 @@ public class Server extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Server");
         setMinimumSize(new java.awt.Dimension(315, 315));
+        setResizable(false);
         getContentPane().setLayout(null);
 
         labelServer.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
