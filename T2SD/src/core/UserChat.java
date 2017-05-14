@@ -29,13 +29,13 @@ public class UserChat extends UnicastRemoteObject implements IUserChat
     }
 
     @Override
-    public String getName() throws RemoteException 
+    public String getName()
     {
         return usrName;
     }
     
     @Override
-    public void setAreaChat(JTextArea areaChat) throws RemoteException
+    public void setAreaChat(JTextArea areaChat)
     {
         this.areaChat = areaChat;
     }

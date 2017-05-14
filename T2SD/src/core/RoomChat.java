@@ -76,7 +76,7 @@ public class RoomChat extends UnicastRemoteObject implements IRoomChat
     }
 
     @Override
-    public String getName() throws RemoteException
+    public String getName()
     {
         return name;
     }

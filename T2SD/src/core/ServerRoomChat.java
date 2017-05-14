@@ -4,6 +4,8 @@ import frames.Server;
 import interfaces.IRoomChat;
 import interfaces.IServerRoomChat;
 import interfaces.IUserChat;
+import java.rmi.AccessException;
+import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -80,5 +82,17 @@ public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomCh
     {
         roomList.remove(room);
         room = null;
+    }
+
+    @Override
+    public void bindUser(IUserChat stub) throws RemoteException
+    {
+        try {
+            Registry registry = LocateRegistry.getRegistry(2020);
+            registry.bind("UserChat#" + stub.getName(), stub);
+            System.out.println("Server binded " + stub.getName());            
+        } catch (Exception ex) {
+            Logger.getLogger(ServerRoomChat.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

@@ -106,11 +106,11 @@ public class Main extends javax.swing.JFrame {
     private void buttonUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUserActionPerformed
         Definitions.serverIp = fieldIp.getText();
         try {
-            Registry registry;
-            registry = LocateRegistry.getRegistry(Definitions.serverIp, 2020);
+            Registry registry = LocateRegistry.getRegistry(Definitions.serverIp, 2020);
             IServerRoomChat stub = (IServerRoomChat) registry.lookup("ServerRoomChat");
-            stub.bindUser(fieldNick.getText());
-            IUserChat user = (IUserChat) registry.lookup("UserChat#" + fieldNick.getText());
+            UserChat user = new UserChat(fieldNick.getText());
+            stub.bindUser((IUserChat) user);
+            //IUserChat user = (IUserChat) registry.lookup("UserChat#" + fieldNick.getText());
             User.main(user);
             dispose();
         } catch (Exception ex) {
