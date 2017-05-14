@@ -24,9 +24,9 @@ import java.util.logging.Logger;
 public class User extends javax.swing.JFrame {
 
     List<IRoomChat> roomsRefs;
-    IUserChat user;
+    UserChat user;
     
-    public User(IUserChat user) throws RemoteException {
+    public User(UserChat user) throws RemoteException {
         initComponents();      
         this.user = user;
         labelUser.setText(user.getName());
@@ -204,7 +204,7 @@ public class User extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(IUserChat user) {
+    public static void main(UserChat user) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

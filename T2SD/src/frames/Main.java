@@ -110,7 +110,6 @@ public class Main extends javax.swing.JFrame {
             IServerRoomChat stub = (IServerRoomChat) registry.lookup("ServerRoomChat");
             UserChat user = new UserChat(fieldNick.getText());
             stub.bindUser((IUserChat) user);
-            //IUserChat user = (IUserChat) registry.lookup("UserChat#" + fieldNick.getText());
             User.main(user);
             dispose();
         } catch (Exception ex) {

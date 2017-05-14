@@ -28,14 +28,15 @@ public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomCh
     {
         super();
         roomList = new ArrayList();
+        //System.setProperty("java.rmi.server.hostname","192.168.0.105");
         try {
             Registry registry = LocateRegistry.createRegistry(2020);
             registry.bind("ServerRoomChat", this);
-            criateRoom("Treta");        
+            criateRoom("Treta");
+            System.out.println("Server start!");
         } catch (Exception ex) {
             Logger.getLogger(ServerRoomChat.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("Server start!");
     }
 
     @Override
@@ -65,6 +66,7 @@ public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomCh
         return roomList;
     }
     
+    /*
     @Override
     public void bindUser(String usrName) throws RemoteException 
     {
@@ -77,6 +79,7 @@ public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomCh
             Logger.getLogger(ServerRoomChat.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    */
     
     public void removeRoom(IRoomChat room)
     {

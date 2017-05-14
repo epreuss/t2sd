@@ -9,7 +9,7 @@ import javax.swing.JTextArea;
  *
  * @author Estevan
  */
-public class UserChat extends UnicastRemoteObject implements IUserChat 
+public class UserChat extends UnicastRemoteObject implements IUserChat
 {
     public String usrName;
     public String serverIp;
@@ -25,17 +25,16 @@ public class UserChat extends UnicastRemoteObject implements IUserChat
     public void deliverMsg(String senderName, String msg) throws RemoteException
     {
         System.out.println(senderName + ": " + msg);
-        //areaChat.append(senderName + ": " + msg + "\n");
+        areaChat.append(senderName + ": " + msg + "\n");
     }
 
     @Override
-    public String getName()
+    public String getName() throws RemoteException 
     {
         return usrName;
     }
     
-    @Override
-    public void setAreaChat(JTextArea areaChat)
+    public void setAreaChat(JTextArea areaChat) 
     {
         this.areaChat = areaChat;
     }

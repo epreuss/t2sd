@@ -18,15 +18,15 @@ import java.util.logging.Logger;
 public class Room extends javax.swing.JFrame {
 
     IRoomChat room;
-    IUserChat user;
+    UserChat user;
     
-    public Room(IRoomChat room, IUserChat user) throws RemoteException {
+    public Room(IRoomChat room, UserChat user) throws RemoteException {
         initComponents();
         this.room = room;
         this.user = user;
         labelRoom.setText(room.getName());
         labelUser.setText("User: " + user.getName());
-        //user.setAreaChat(areaChat);
+        user.setAreaChat(areaChat);
         buttonSend.setEnabled(false);
         /*
             System.out.println(Definitions.serverIp);
@@ -161,7 +161,7 @@ public class Room extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(IRoomChat room, IUserChat user) {
+    public static void main(IRoomChat room, UserChat user) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
