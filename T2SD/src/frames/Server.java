@@ -10,6 +10,7 @@ import core.ServerRoomChat;
 import interfaces.IRoomChat;
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,12 +29,17 @@ public class Server extends javax.swing.JFrame {
         this.server.setFrame(this);
         refreshRooms();
     }
+    
     public void refreshRooms() throws RemoteException
     {
-        List<String> roomNames = server.getRooms();
-        String[] listData = new String[roomNames.size()];
-        for (int i = 0; i < roomNames.size(); i++)
-            listData[i] = roomNames.get(i);
+        Map<String, IRoomChat> rooms = server.getRooms();
+        String[] listData = new String[rooms.size()];
+        int i = 0;
+        for (String name : rooms.keySet())
+        {
+            listData[i] = name;
+            i++;
+        }
         listRooms.setListData(listData);
     }
 
@@ -128,7 +134,7 @@ public class Server extends javax.swing.JFrame {
     private void buttonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateActionPerformed
         try 
         {
-            server.criateRoom(fieldRoom.getText());
+            server.createRoom(fieldRoom.getText());
         } catch (RemoteException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -146,7 +152,8 @@ public class Server extends javax.swing.JFrame {
         {
             IRoomChat stub = server.getRoomRef(selectedRoom);
             stub.closeRoom();
-            server.removeRoom(stub);
+            server.removeRoom(selectedRoom);
+            stub = null;
             refreshRooms();
         } catch (Exception ex) 
         {

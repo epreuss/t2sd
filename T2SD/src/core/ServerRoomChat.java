@@ -11,7 +11,9 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,18 +23,18 @@ import java.util.logging.Logger;
  */
 public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomChat
 {
-    List<IRoomChat> roomList;
+    Map<String, IRoomChat> rooms;
     private Server frame;
 
     public ServerRoomChat() throws RemoteException
     {
         super();
-        roomList = new ArrayList();
+        rooms = new HashMap<String, IRoomChat>();
         //System.setProperty("java.rmi.server.hostname","192.168.0.105");
         try {
             Registry registry = LocateRegistry.createRegistry(2020);
             registry.bind(Definitions.serverBindName, this);
-            criateRoom("Treta");
+            createRoom("RollSafe");
             System.out.println("Server start!");
         } catch (Exception ex) {
             Logger.getLogger(ServerRoomChat.class.getName()).log(Level.SEVERE, null, ex);
@@ -40,18 +42,18 @@ public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomCh
     }
 
     @Override
-    public void criateRoom(String roomName) throws RemoteException
+    public void createRoom(String roomName) throws RemoteException
     {
         // Não deixa criar com nomes iguais.
-        for (IRoomChat room : roomList)
-            if (room.getName().equals(roomName))
+        for (String name : rooms.keySet())
+            if (name.equals(roomName))
                 return;
         
         try {
             new RoomChat(roomName);
             Registry registry = LocateRegistry.getRegistry(2020);
             IRoomChat stub = (IRoomChat) registry.lookup(Definitions.roomBindPrefix + roomName);
-            roomList.add(stub);
+            rooms.put(roomName, stub);
         } catch (Exception ex) {
             Logger.getLogger(ServerRoomChat.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -61,26 +63,19 @@ public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomCh
     }
 
     @Override
-    public List<String> getRooms() throws RemoteException
-    {
-        List<String> roomNames = new ArrayList();
-        for (IRoomChat room : roomList)
-            roomNames.add(room.getName());
-        return roomNames;
+    public Map<String, IRoomChat> getRooms() throws RemoteException
+    {        
+        return rooms;
     }
 
-    public void removeRoom(IRoomChat room)
+    public void removeRoom(String name)
     {
-        roomList.remove(room);
-        room = null;
+        rooms.remove(name);        
     }
     
     public IRoomChat getRoomRef(String name) throws RemoteException
     {
-        for (IRoomChat room : roomList)
-            if (room.getName().equals(name))
-                return room;
-        return null;
+        return rooms.get(name);        
     }
     
     public void setFrame(Server frame)

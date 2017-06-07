@@ -14,6 +14,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +24,7 @@ import java.util.logging.Logger;
  */
 public class User extends javax.swing.JFrame {
 
-    List<String> roomNames;
+    Map<String, IRoomChat> rooms;
     UserChat user;
     
     public User(UserChat user) throws RemoteException {
@@ -43,8 +44,8 @@ public class User extends javax.swing.JFrame {
         try {
             Registry registry = LocateRegistry.getRegistry(Definitions.serverIp, 2020);
             IServerRoomChat stub = (IServerRoomChat) registry.lookup(Definitions.serverBindName);
-            roomNames = stub.getRooms();
-            refreshListRooms();
+            rooms = stub.getRooms();
+            refreshRooms();
         } catch (Exception ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
             emptyRoomsList();
@@ -56,20 +57,25 @@ public class User extends javax.swing.JFrame {
         try {
             Registry registry = LocateRegistry.getRegistry(Definitions.serverIp, 2020);
             IServerRoomChat stub = (IServerRoomChat) registry.lookup(Definitions.serverBindName);
-            stub.criateRoom(roomName);
+            stub.createRoom(roomName);
         } catch (Exception ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    } 
     
-    public void refreshListRooms() throws RemoteException
+    public void refreshRooms() throws RemoteException
     {
-        String[] listData = new String[roomNames.size()];
-        for (int i = 0; i < roomNames.size(); i++)
-            listData[i] = roomNames.get(i);
+        String[] listData = new String[rooms.size()];
+        int i = 0;
+        for (String name : rooms.keySet())
+        {
+            listData[i] = name;
+            i++;
+        }
         listRooms.setListData(listData);
     }
     
+    /*
     public IRoomChat getRoomRef(String name) throws RemoteException
     {
         try {
@@ -81,6 +87,7 @@ public class User extends javax.swing.JFrame {
         }
         return null;
     }
+    */
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -200,11 +207,11 @@ public class User extends javax.swing.JFrame {
         requestServerRooms();
         System.out.println("Selected room: " + selectedRoom);
         try {
-            for (String room : roomNames)
+            for (String room : rooms.keySet())
             {
                 if (room.equals(selectedRoom))
                 {
-                    IRoomChat stub = getRoomRef(room);
+                    IRoomChat stub = rooms.get(selectedRoom);
                     stub.joinRoom(user.getName());
                     Room.main(stub, user);
                     System.out.println("Join success");      
