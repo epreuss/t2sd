@@ -20,12 +20,12 @@ public class Room extends javax.swing.JFrame {
     IRoomChat room;
     UserChat user;
     
-    public Room(IRoomChat room, UserChat user) throws RemoteException {
+    public Room(String roomName, IRoomChat room, UserChat user) throws RemoteException {
         initComponents();
         this.room = room;
         this.user = user;
-        labelRoom.setText(room.getName());
-        labelUser.setText("User: " + user.getName());
+        labelRoom.setText(roomName);
+        labelUser.setText("User: " + user.usrName);
         user.setAreaChat(areaChat);
         buttonSend.setEnabled(false);
     }
@@ -33,7 +33,7 @@ public class Room extends javax.swing.JFrame {
     public void sendMessage()
     {
         try {
-            room.sendMsg(user.getName(), fieldMsg.getText());
+            room.sendMsg(user.usrName, fieldMsg.getText());
         } catch (RemoteException ex) {
             Logger.getLogger(Room.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -142,7 +142,7 @@ public class Room extends javax.swing.JFrame {
         User.main(user);
         dispose();
         try {
-            room.leaveRoom(user.getName());
+            room.leaveRoom(user.usrName);
         } catch (RemoteException ex) {
             Logger.getLogger(Room.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -159,7 +159,7 @@ public class Room extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(IRoomChat room, UserChat user) {
+    public static void main(String roomName, IRoomChat room, UserChat user) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -187,7 +187,7 @@ public class Room extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new Room(room, user).setVisible(true);
+                    new Room(roomName, room, user).setVisible(true);
                 } catch (RemoteException ex) {
                     Logger.getLogger(Room.class.getName()).log(Level.SEVERE, null, ex);
                 }

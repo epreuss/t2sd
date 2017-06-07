@@ -3,16 +3,11 @@ package core;
 import frames.Server;
 import interfaces.IRoomChat;
 import interfaces.IServerRoomChat;
-import interfaces.IUserChat;
-import java.rmi.AccessException;
-import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -83,6 +78,7 @@ public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomCh
         this.frame = frame;
     }
 
+    /*
     @Override
     public void bindUser(IUserChat stub) throws RemoteException
     {
@@ -94,4 +90,5 @@ public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomCh
             Logger.getLogger(ServerRoomChat.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    */
 }

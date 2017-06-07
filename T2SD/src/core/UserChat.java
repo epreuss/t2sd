@@ -27,12 +27,6 @@ public class UserChat extends UnicastRemoteObject implements IUserChat
         System.out.println(senderName + ": " + msg);
         areaChat.append(senderName + ": " + msg + "\n");
     }
-
-    @Override
-    public String getName() throws RemoteException 
-    {
-        return usrName;
-    }
     
     public void setAreaChat(JTextArea areaChat) 
     {

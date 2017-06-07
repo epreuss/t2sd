@@ -106,6 +106,7 @@ public class Main extends javax.swing.JFrame {
 
     private void buttonUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUserActionPerformed
         Definitions.serverIp = fieldIp.getText();
+        /*
         try {
             Registry registry = LocateRegistry.getRegistry(Definitions.serverIp, 2020);
             IServerRoomChat stub = (IServerRoomChat) registry.lookup(Definitions.serverBindName);
@@ -116,7 +117,15 @@ public class Main extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(UserChat.class.getName()).log(Level.SEVERE, null, ex);
         }
-        buttonUser.setText("Bug");
+        */
+        UserChat user = null;
+        try {
+            user = new UserChat(fieldNick.getText());
+        } catch (RemoteException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        User.main(user);
+        dispose();
     }//GEN-LAST:event_buttonUserActionPerformed
 
     private void buttonServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonServerActionPerformed

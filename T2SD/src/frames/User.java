@@ -30,7 +30,7 @@ public class User extends javax.swing.JFrame {
     public User(UserChat user) throws RemoteException {
         initComponents();      
         this.user = user;
-        labelUser.setText(user.getName());
+        labelUser.setText(user.usrName);
         requestServerRooms();
     }
     
@@ -212,8 +212,8 @@ public class User extends javax.swing.JFrame {
                 if (room.equals(selectedRoom))
                 {
                     IRoomChat stub = rooms.get(selectedRoom);
-                    stub.joinRoom(user.getName());
-                    Room.main(stub, user);
+                    stub.joinRoom(user.usrName, (IUserChat) user);
+                    Room.main(selectedRoom, stub, user);
                     System.out.println("Join success");      
                     dispose();
                     return;
