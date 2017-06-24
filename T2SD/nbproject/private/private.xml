@@ -3,22 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Estevan/Documents/GitHub/t2sd/T2SD/src/learning/Hello.java</file>
-            <file>file:/C:/Users/Estevan/Documents/GitHub/t2sd/T2SD/src/core/ServerRoomChat.java</file>
-            <file>file:/C:/Users/Estevan/Documents/GitHub/t2sd/T2SD/src/core/T2SD.java</file>
-            <file>file:/C:/Users/Estevan/Documents/GitHub/t2sd/T2SD/src/learning/Server.java</file>
-            <file>file:/C:/Users/Estevan/Documents/GitHub/t2sd/T2SD/src/frames/Server.java</file>
-            <file>file:/C:/Users/Estevan/Documents/GitHub/t2sd/T2SD/src/interfaces/IServerRoomChat.java</file>
-            <file>file:/C:/Users/Estevan/Documents/GitHub/t2sd/T2SD/src/frames/Room.java</file>
-            <file>file:/C:/Users/Estevan/Documents/GitHub/t2sd/T2SD/src/learning/HelloImpl.java</file>
-            <file>file:/C:/Users/Estevan/Documents/GitHub/t2sd/T2SD/src/core/Definitions.java</file>
-            <file>file:/C:/Users/Estevan/Documents/GitHub/t2sd/T2SD/src/learning/Client.java</file>
-            <file>file:/C:/Users/Estevan/Documents/GitHub/t2sd/T2SD/src/core/UserChat.java</file>
-            <file>file:/C:/Users/Estevan/Documents/GitHub/t2sd/T2SD/src/core/RoomChat.java</file>
-            <file>file:/C:/Users/Estevan/Documents/GitHub/t2sd/T2SD/src/frames/User.java</file>
-            <file>file:/C:/Users/Estevan/Documents/GitHub/t2sd/T2SD/src/interfaces/IUserChat.java</file>
-            <file>file:/C:/Users/Estevan/Documents/GitHub/t2sd/T2SD/src/interfaces/IRoomChat.java</file>
-            <file>file:/C:/Users/Estevan/Documents/GitHub/t2sd/T2SD/src/frames/Main.java</file>
+            <file>file:/C:/Users/Owner/Documents/GitHub/t2sd/T2SD/src/frames/Server.java</file>
+            <file>file:/C:/Users/Owner/Documents/GitHub/t2sd/T2SD/src/interfaces/IServerRoomChat.java</file>
+            <file>file:/C:/Users/Owner/Documents/GitHub/t2sd/T2SD/src/frames/User.java</file>
+            <file>file:/C:/Users/Owner/Documents/GitHub/t2sd/T2SD/src/core/UserChat.java</file>
+            <file>file:/C:/Users/Owner/Documents/GitHub/t2sd/T2SD/src/core/T2SD.java</file>
+            <file>file:/C:/Users/Owner/Documents/GitHub/t2sd/T2SD/src/core/RoomChat.java</file>
+            <file>file:/C:/Users/Owner/Documents/GitHub/t2sd/T2SD/src/core/ServerRoomChat.java</file>
+            <file>file:/C:/Users/Owner/Documents/GitHub/t2sd/T2SD/src/frames/Room.java</file>
+            <file>file:/C:/Users/Owner/Documents/GitHub/t2sd/T2SD/src/frames/Main.java</file>
+            <file>file:/C:/Users/Owner/Documents/GitHub/t2sd/T2SD/src/interfaces/IRoomChat.java</file>
+            <file>file:/C:/Users/Owner/Documents/GitHub/t2sd/T2SD/src/interfaces/IUserChat.java</file>
         </group>
     </open-files>
 </project-private>

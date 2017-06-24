@@ -7,7 +7,7 @@
 package frames;
 
 import core.ServerRoomChat;
-import interfaces.IRoomChat;
+import chatPackage.IRoomChat;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Map;

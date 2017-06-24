@@ -1,4 +1,4 @@
-package interfaces;
+package chatPackage;
 
 import java.rmi.RemoteException;
 import java.util.TreeMap;

@@ -7,9 +7,9 @@ package frames;
 
 import core.Definitions;
 import core.UserChat;
-import interfaces.IRoomChat;
-import interfaces.IServerRoomChat;
-import interfaces.IUserChat;
+import chatPackage.IRoomChat;
+import chatPackage.IServerRoomChat;
+import chatPackage.IUserChat;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
