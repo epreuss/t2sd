@@ -9,6 +9,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,13 +19,13 @@ import java.util.logging.Logger;
  */
 public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomChat
 {
-    Map<String, IRoomChat> rooms;
+    TreeMap<String, IRoomChat> rooms;
     private Server frame;
 
     public ServerRoomChat() throws RemoteException
     {
         super();
-        rooms = new HashMap<String, IRoomChat>();
+        rooms = new TreeMap<String, IRoomChat>();
         //System.setProperty("java.rmi.server.hostname","192.168.0.105");
         try {
             Registry registry = LocateRegistry.createRegistry(2020);
@@ -58,7 +59,7 @@ public class ServerRoomChat extends UnicastRemoteObject implements IServerRoomCh
     }
 
     @Override
-    public Map<String, IRoomChat> getRooms() throws RemoteException
+    public TreeMap<String, IRoomChat> getRooms() throws RemoteException
     {        
         return rooms;
     }

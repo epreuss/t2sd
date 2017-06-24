@@ -212,7 +212,7 @@ public class User extends javax.swing.JFrame {
                 if (room.equals(selectedRoom))
                 {
                     IRoomChat stub = rooms.get(selectedRoom);
-                    stub.joinRoom(user.usrName, (IUserChat) user);
+                    user.id = stub.joinRoom(user.usrName, (IUserChat) user);
                     Room.main(selectedRoom, stub, user);
                     System.out.println("Join success");      
                     dispose();

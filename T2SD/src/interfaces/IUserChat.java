@@ -1,7 +1,7 @@
 package interfaces;
 
 import java.rmi.RemoteException;
-import javax.swing.JTextArea;
+import java.util.TreeMap;
 
 /**
  *
@@ -9,5 +9,6 @@ import javax.swing.JTextArea;
  */
 public interface IUserChat extends java.rmi.Remote 
 {
-    public void deliverMsg(String senderName, String msg) throws RemoteException;
+    public void updateUserList(TreeMap<String, IUserChat> userList) throws RemoteException;
+    public void deliverMsg(String senderName, String msg, Integer[][] clockMatrix) throws RemoteException;
 }

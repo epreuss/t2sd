@@ -33,7 +33,8 @@ public class Room extends javax.swing.JFrame {
     public void sendMessage()
     {
         try {
-            room.sendMsg(user.usrName, fieldMsg.getText());
+            for (IUserChat listener : user.users.values())
+                listener.deliverMsg(user.usrName, fieldMsg.getText(), user.clockMatrix);
         } catch (RemoteException ex) {
             Logger.getLogger(Room.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -56,11 +57,11 @@ public class Room extends javax.swing.JFrame {
         areaChat = new javax.swing.JTextArea();
         fieldMsg = new javax.swing.JTextField();
         labelUser = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        labelChat = new javax.swing.JLabel();
         buttonSend = new javax.swing.JButton();
         buttonExit = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Room");
         setMinimumSize(new java.awt.Dimension(290, 400));
         setResizable(false);
@@ -101,10 +102,10 @@ public class Room extends javax.swing.JFrame {
         getContentPane().add(labelUser);
         labelUser.setBounds(121, 10, 140, 30);
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel4.setText("Chat");
-        getContentPane().add(jLabel4);
-        jLabel4.setBounds(10, 60, 29, 17);
+        labelChat.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        labelChat.setText("Chat");
+        getContentPane().add(labelChat);
+        labelChat.setBounds(10, 60, 29, 17);
 
         buttonSend.setText("Send");
         buttonSend.addActionListener(new java.awt.event.ActionListener() {
@@ -200,9 +201,9 @@ public class Room extends javax.swing.JFrame {
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonSend;
     private javax.swing.JTextField fieldMsg;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel labelChat;
     private javax.swing.JLabel labelRoom;
     private javax.swing.JLabel labelUser;
     // End of variables declaration//GEN-END:variables

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,13 +21,13 @@ import java.util.logging.Logger;
 public class RoomChat extends UnicastRemoteObject implements IRoomChat
 {
     public String name;
-    Map<String, IUserChat> users;
+    TreeMap<String, IUserChat> users;
 
     public RoomChat(String roomName) throws RemoteException
     {
         super();
         this.name = roomName;
-        users = new HashMap<String, IUserChat>();
+        users = new TreeMap<String, IUserChat>();
         try {
             Registry registry = LocateRegistry.getRegistry(2020);
             registry.bind(Definitions.roomBindPrefix + name, this);
@@ -36,27 +37,22 @@ public class RoomChat extends UnicastRemoteObject implements IRoomChat
     }
     
     @Override
-    public void joinRoom(String usrName, IUserChat localObjRef) throws RemoteException
+    public int joinRoom(String usrName, IUserChat localObjRef) throws RemoteException
     {
-        /*
-        try {
-            Registry registry = LocateRegistry.getRegistry(2020);
-            IUserChat stub = (IUserChat) registry.lookup(Definitions.userBindPrefix + usrName);
-            userRemotes.add(stub);
-            System.out.println((Definitions.userBindPrefix + stub.getName()) + " joined " + "Room " + (Definitions.roomBindPrefix + name));
-        } catch (Exception ex) {
-            Logger.getLogger(RoomChat.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        */
         users.put(usrName, localObjRef);
+        // Estabilizar mensagens.
+        // ...
+        // Atualiza a lista de users para todos.
+        for (IUserChat user : users.values())
+            user.updateUserList(users);
         System.out.println((Definitions.userBindPrefix + usrName) + " joined " + "Room " + (Definitions.roomBindPrefix + name));
+        return users.size()-1;
     }
     
-    @Override
-    public void sendMsg(String usrName, String msg) throws RemoteException
+    public void sendMsgToAll(String usrName, String msg) throws RemoteException
     {
         for (IUserChat user : users.values())
-            user.deliverMsg(usrName, msg);
+            user.deliverMsg(usrName, msg, null);
     }
 
     @Override
@@ -68,6 +64,11 @@ public class RoomChat extends UnicastRemoteObject implements IRoomChat
                 users.remove(name);
                 break;
             }
+        // Estabilizar mensagens.
+        // ...
+        // Atualiza a lista de users para todos.
+        for (IUserChat user : users.values())
+            user.updateUserList(users);
     }
 
     @Override
@@ -75,7 +76,7 @@ public class RoomChat extends UnicastRemoteObject implements IRoomChat
     {
         try {
             Registry registry = LocateRegistry.getRegistry(2020);
-            sendMsg("Server", "Sala fechada pelo servidor!");
+            sendMsgToAll("Server", "Sala fechada pelo servidor!");
             registry.unbind(Definitions.roomBindPrefix + name);
             users = null;
         } catch (Exception ex) {
@@ -83,3 +84,4 @@ public class RoomChat extends UnicastRemoteObject implements IRoomChat
         }
     }
 }
+
