@@ -22,10 +22,12 @@ public class RoomChat extends UnicastRemoteObject implements IRoomChat
 {
     public String name;
     TreeMap<String, IUserChat> users;
+    int idCounter;
 
     public RoomChat(String roomName) throws RemoteException
     {
         super();
+        idCounter = -1;
         this.name = roomName;
         users = new TreeMap<String, IUserChat>();
         try {
@@ -40,13 +42,12 @@ public class RoomChat extends UnicastRemoteObject implements IRoomChat
     public int joinRoom(String usrName, IUserChat localObjRef) throws RemoteException
     {
         users.put(usrName, localObjRef);
-        // Estabilizar mensagens.
-        // ...
         // Atualiza a lista de users para todos.
         for (IUserChat user : users.values())
             user.updateUserList(users);
         System.out.println((Definitions.userBindPrefix + usrName) + " joined " + "Room " + (Definitions.roomBindPrefix + name));
-        return users.size()-1;
+        idCounter++;
+        return idCounter;
     }
     
     public void sendMsgToAll(String usrName, String msg) throws RemoteException
@@ -58,14 +59,15 @@ public class RoomChat extends UnicastRemoteObject implements IRoomChat
     @Override
     public void leaveRoom(String usrName) throws RemoteException 
     {
+        if (users == null)
+            return;
+        
         for (String name : users.keySet())
             if (name.equals(usrName))
             {
                 users.remove(name);
                 break;
             }
-        // Estabilizar mensagens.
-        // ...
         // Atualiza a lista de users para todos.
         for (IUserChat user : users.values())
             user.updateUserList(users);

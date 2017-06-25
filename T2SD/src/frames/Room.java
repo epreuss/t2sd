@@ -3,6 +3,7 @@ package frames;
 import core.UserChat;
 import chatPackage.IRoomChat;
 import chatPackage.IUserChat;
+import core.MessageThread;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,27 +16,76 @@ public class Room extends javax.swing.JFrame {
 
     IRoomChat room;
     UserChat user;
+    MessageThread thread;
+    Integer[][] oldClock;
+    String targetMsg;
     
     public Room(String roomName, IRoomChat room, UserChat user) throws RemoteException {
         initComponents();
         this.room = room;
         this.user = user;
+        thread = new MessageThread(user);
         labelRoom.setText(roomName);
-        labelUser.setText("User: " + user.usrName);
+        labelUser.setText("User: " + user.usrName + "[" + user.id + "]");
         user.setAreaChat(areaChat);
+        user.setAreaBuffer(areaBuffer);
         buttonSend.setEnabled(false);
+        oldClock = new Integer[user.size][user.size];        
     }
 
+    private void saveClock()
+    {
+        for (int i = 0; i < user.size; i++)
+            for (int j = 0; j < user.size; j++)
+                oldClock[i][j] = user.clock[i][j];  
+    }
+    
     public void sendMessage()
     {
         try {
             for (IUserChat listener : user.users.values())
-                listener.deliverMsg(user.usrName, fieldMsg.getText(), user.clockMatrix);
+                    listener.deliverMsg(user.usrName, fieldMsg.getText(), user.clock);
+            user.clock[user.id][user.id] += 1;
         } catch (RemoteException ex) {
             Logger.getLogger(Room.class.getName()).log(Level.SEVERE, null, ex);
         }
         fieldMsg.setText("");
         buttonSend.setEnabled(false);
+    }
+    
+    private void sendMessageToAllButTarget()
+    {
+        saveClock();
+        targetMsg = fieldMsg.getText();
+        try {
+            for (IUserChat listener : user.users.values())
+            {
+                if (listener.getId() == Integer.parseInt(fieldTarget.getText()))
+                    continue;
+                listener.deliverMsg(user.usrName, fieldMsg.getText(), user.clock);
+            }
+            user.clock[user.id][user.id] += 1;
+            user.printClock();
+
+        } catch (RemoteException ex) {
+            Logger.getLogger(Room.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+    }
+    
+    private void sendMessageToTarget()
+    {
+        try {
+            for (IUserChat listener : user.users.values())
+            {
+                if (listener.getId() == Integer.parseInt(fieldTarget.getText()))
+                {
+                    listener.deliverMsg(user.usrName, targetMsg, oldClock);
+                    return;
+                }
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(Room.class.getName()).log(Level.SEVERE, null, ex);
+        }             
     }
     
     /**
@@ -49,17 +99,23 @@ public class Room extends javax.swing.JFrame {
 
         labelRoom = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        paneChat = new javax.swing.JScrollPane();
         areaChat = new javax.swing.JTextArea();
         fieldMsg = new javax.swing.JTextField();
         labelUser = new javax.swing.JLabel();
         labelChat = new javax.swing.JLabel();
         buttonSend = new javax.swing.JButton();
         buttonExit = new javax.swing.JButton();
+        buttonTarget = new javax.swing.JButton();
+        fieldTarget = new javax.swing.JTextField();
+        buttonNotTarget = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        areaBuffer = new javax.swing.JTextArea();
+        labelChat1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Room");
-        setMinimumSize(new java.awt.Dimension(290, 400));
+        setMinimumSize(new java.awt.Dimension(540, 400));
         setResizable(false);
         getContentPane().setLayout(null);
 
@@ -68,15 +124,15 @@ public class Room extends javax.swing.JFrame {
         getContentPane().add(labelRoom);
         labelRoom.setBounds(10, 11, 160, 22);
         getContentPane().add(jSeparator1);
-        jSeparator1.setBounds(10, 44, 250, 10);
+        jSeparator1.setBounds(10, 44, 510, 10);
 
         areaChat.setEditable(false);
         areaChat.setColumns(20);
         areaChat.setRows(5);
-        jScrollPane2.setViewportView(areaChat);
+        paneChat.setViewportView(areaChat);
 
-        getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(10, 83, 250, 191);
+        getContentPane().add(paneChat);
+        paneChat.setBounds(10, 83, 250, 191);
 
         fieldMsg.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -96,21 +152,21 @@ public class Room extends javax.swing.JFrame {
         labelUser.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelUser.setText("User: Steve");
         getContentPane().add(labelUser);
-        labelUser.setBounds(121, 10, 140, 30);
+        labelUser.setBounds(380, 10, 140, 30);
 
         labelChat.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        labelChat.setText("Chat");
+        labelChat.setText("Buffer");
         getContentPane().add(labelChat);
-        labelChat.setBounds(10, 60, 29, 17);
+        labelChat.setBounds(270, 60, 60, 17);
 
-        buttonSend.setText("Send");
+        buttonSend.setText("Send to all");
         buttonSend.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonSendActionPerformed(evt);
             }
         });
         getContentPane().add(buttonSend);
-        buttonSend.setBounds(10, 320, 120, 30);
+        buttonSend.setBounds(10, 320, 170, 30);
 
         buttonExit.setText("Exit");
         buttonExit.addActionListener(new java.awt.event.ActionListener() {
@@ -119,7 +175,45 @@ public class Room extends javax.swing.JFrame {
             }
         });
         getContentPane().add(buttonExit);
-        buttonExit.setBounds(150, 320, 110, 30);
+        buttonExit.setBounds(190, 320, 70, 30);
+
+        buttonTarget.setText("Target");
+        buttonTarget.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonTargetActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonTarget);
+        buttonTarget.setBounds(450, 280, 70, 30);
+
+        fieldTarget.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        fieldTarget.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        fieldTarget.setText("0");
+        fieldTarget.setToolTipText("");
+        getContentPane().add(fieldTarget);
+        fieldTarget.setBounds(270, 280, 40, 30);
+
+        buttonNotTarget.setText("All but target");
+        buttonNotTarget.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonNotTargetActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonNotTarget);
+        buttonNotTarget.setBounds(320, 280, 120, 30);
+
+        areaBuffer.setEditable(false);
+        areaBuffer.setColumns(20);
+        areaBuffer.setRows(5);
+        jScrollPane3.setViewportView(areaBuffer);
+
+        getContentPane().add(jScrollPane3);
+        jScrollPane3.setBounds(270, 83, 250, 190);
+
+        labelChat1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        labelChat1.setText("Chat");
+        getContentPane().add(labelChat1);
+        labelChat1.setBounds(10, 60, 29, 17);
 
         pack();
         setLocationRelativeTo(null);
@@ -152,6 +246,14 @@ public class Room extends javax.swing.JFrame {
     private void fieldMsgKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fieldMsgKeyTyped
         buttonSend.setEnabled(fieldMsg.getText().length() > 0);
     }//GEN-LAST:event_fieldMsgKeyTyped
+
+    private void buttonTargetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTargetActionPerformed
+        sendMessageToTarget();
+    }//GEN-LAST:event_buttonTargetActionPerformed
+
+    private void buttonNotTargetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNotTargetActionPerformed
+        sendMessageToAllButTarget();
+    }//GEN-LAST:event_buttonNotTargetActionPerformed
 
     /**
      * @param args the command line arguments
@@ -193,14 +295,20 @@ public class Room extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea areaBuffer;
     private javax.swing.JTextArea areaChat;
     private javax.swing.JButton buttonExit;
+    private javax.swing.JButton buttonNotTarget;
     private javax.swing.JButton buttonSend;
+    private javax.swing.JButton buttonTarget;
     private javax.swing.JTextField fieldMsg;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField fieldTarget;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel labelChat;
+    private javax.swing.JLabel labelChat1;
     private javax.swing.JLabel labelRoom;
     private javax.swing.JLabel labelUser;
+    private javax.swing.JScrollPane paneChat;
     // End of variables declaration//GEN-END:variables
 }

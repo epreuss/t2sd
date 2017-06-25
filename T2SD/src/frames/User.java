@@ -32,6 +32,9 @@ public class User extends javax.swing.JFrame {
         this.user = user;
         labelUser.setText(user.usrName);
         requestServerRooms();
+        listRooms.setSelectedIndex(0);
+        buttonJoinActionPerformed(null);
+        setVisible(false);
     }
     
     public void emptyRoomsList()
@@ -213,8 +216,9 @@ public class User extends javax.swing.JFrame {
                 {
                     IRoomChat stub = rooms.get(selectedRoom);
                     user.id = stub.joinRoom(user.usrName, (IUserChat) user);
+                    
                     Room.main(selectedRoom, stub, user);
-                    System.out.println("Join success");      
+                    System.out.println("Join success[" + user.usrName + ", " + user.id + "]");      
                     dispose();
                     return;
                 }
@@ -265,7 +269,7 @@ public class User extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new User(user).setVisible(true);
+                    new User(user);//.setVisible(true);
                 } catch (RemoteException ex) {
                     Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
                 }

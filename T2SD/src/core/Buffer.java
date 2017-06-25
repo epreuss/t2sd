@@ -14,14 +14,23 @@ public class Buffer
 {
     public String senderName;
     public String msg;
-    public int userId;
+    public int senderId;
     public int clock;
+    public Integer[] clocks;
     
-    public Buffer(String senderName, String msg, int userId, int clock)
+    public Buffer(String senderName, String msg, int senderId, int clock)
     {
         this.senderName = senderName;
         this.msg = msg;
-        this.userId = userId;
+        this.senderId = senderId;
         this.clock = clock;
+    }
+    
+    public Buffer(String senderName, String msg, int senderId, Integer[] clocks)
+    {
+        this.senderName = senderName;
+        this.msg = msg;
+        this.senderId = senderId;
+        this.clocks = clocks;
     }
 }

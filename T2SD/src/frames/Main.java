@@ -25,6 +25,18 @@ public class Main extends javax.swing.JFrame {
         initComponents();
     }
 
+    public void createUser(String name)
+    {
+        Definitions.serverIp = fieldIp.getText();
+        UserChat user = null;
+        try {
+            user = new UserChat(name);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        User.main(user);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -42,6 +54,9 @@ public class Main extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         fieldNick = new javax.swing.JTextField();
+        buttonUser1 = new javax.swing.JButton();
+        buttonUser2 = new javax.swing.JButton();
+        buttonUser3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("!");
@@ -96,31 +111,48 @@ public class Main extends javax.swing.JFrame {
         getContentPane().add(fieldNick);
         fieldNick.setBounds(10, 180, 120, 30);
 
+        buttonUser1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        buttonUser1.setText("3");
+        buttonUser1.setToolTipText("");
+        buttonUser1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonUser1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonUser1);
+        buttonUser1.setBounds(90, 250, 41, 30);
+
+        buttonUser2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        buttonUser2.setText("1");
+        buttonUser2.setToolTipText("");
+        buttonUser2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonUser2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonUser2);
+        buttonUser2.setBounds(10, 250, 41, 30);
+
+        buttonUser3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        buttonUser3.setText("2");
+        buttonUser3.setToolTipText("");
+        buttonUser3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonUser3ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonUser3);
+        buttonUser3.setBounds(50, 250, 41, 30);
+
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUserActionPerformed
-        Definitions.serverIp = fieldIp.getText();
-        /*
-        try {
-            Registry registry = LocateRegistry.getRegistry(Definitions.serverIp, 2020);
-            IServerRoomChat stub = (IServerRoomChat) registry.lookup(Definitions.serverBindName);
-            UserChat user = new UserChat(fieldNick.getText());
-            stub.bindUser((IUserChat) user);
-            User.main(user);
-            dispose();
-        } catch (Exception ex) {
-            Logger.getLogger(UserChat.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        */
-        UserChat user = null;
-        try {
-            user = new UserChat(fieldNick.getText());
-        } catch (RemoteException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        User.main(user);
+        //createUser(fieldNick.getText());
+        //createUser("Steve");
+        createUser("Vicky");
+        createUser("Jacky");
         dispose();
     }//GEN-LAST:event_buttonUserActionPerformed
 
@@ -134,6 +166,21 @@ public class Main extends javax.swing.JFrame {
         Server.main(server);
         dispose();
     }//GEN-LAST:event_buttonServerActionPerformed
+
+    private void buttonUser1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUser1ActionPerformed
+        createUser("Steve");
+        dispose();
+    }//GEN-LAST:event_buttonUser1ActionPerformed
+
+    private void buttonUser2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUser2ActionPerformed
+        createUser("Jacky");
+        dispose();
+    }//GEN-LAST:event_buttonUser2ActionPerformed
+
+    private void buttonUser3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUser3ActionPerformed
+        createUser("Vicky");
+        dispose();
+    }//GEN-LAST:event_buttonUser3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -173,6 +220,9 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonServer;
     private javax.swing.JButton buttonUser;
+    private javax.swing.JButton buttonUser1;
+    private javax.swing.JButton buttonUser2;
+    private javax.swing.JButton buttonUser3;
     private javax.swing.JTextField fieldIp;
     private javax.swing.JTextField fieldNick;
     private javax.swing.JLabel jLabel1;
